@@ -1,0 +1,27 @@
+name: check
+
+on:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Run check.py for each exercise this PR touches
+        run: |
+          changed=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD" -- exercises/ | cut -d/ -f2 | sort -u)
+          status=0
+          for ex in $changed; do
+            if [ -f "exercises/$ex/check.py" ]; then
+              echo "::group::$ex"
+              python "exercises/$ex/check.py" || status=1
+              echo "::endgroup::"
+            fi
+          done
+          exit $status
