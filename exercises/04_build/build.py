@@ -1,4 +1,4 @@
-# Write the body of each function. Replace the line `raise NotImplementedError`
+# Write the body of each function. Replace the line `return 0`
 # with your code. Don't change the function names.
 
 
